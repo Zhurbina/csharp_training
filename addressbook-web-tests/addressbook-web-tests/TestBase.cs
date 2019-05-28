@@ -96,5 +96,30 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.Name("delete")).Click();
         }
+
+        protected void GoToContactPage()
+        {
+            driver.FindElement(By.LinkText("add new")).Click();
+        }
+
+        protected void FillContactForm(ContactData contact)
+        {
+            driver.FindElement(By.Name("firstname")).Click();
+            driver.FindElement(By.Name("firstname")).Clear();
+            driver.FindElement(By.Name("firstname")).SendKeys(contact.FirstName);
+            driver.FindElement(By.Name("lastname")).Click();
+            driver.FindElement(By.Name("lastname")).Clear();
+            driver.FindElement(By.Name("lastname")).SendKeys(contact.LastName);
+        }
+
+        protected void SubmitContactCreation()
+        {
+            driver.FindElement(By.XPath("(//input[@name='submit'])[2]")).Click();
+        }
+
+        protected void Logout()
+        {
+            driver.FindElement(By.LinkText("Logout")).Click();
+        }
     }
 }
