@@ -42,16 +42,12 @@ namespace WebAddressbookTests
         [Test]
         public void ContactCreationTest()
         {
-            GoToHomePage();
-            Login(new AccountData ("admin", "secret"));
-            GoToContactPage();
-
             ContactData contact = new ContactData("ALENA", "LIU");
             contact.Company = "OCS";
-            FillContactForm(contact);
+            app.Contacts.FillContactForm(contact);
 
-            SubmitContactCreation();
-            Logout();
+            app.Contacts.SubmitContactCreation();
+            app.LogOut.Logout();
         }
     }
 }
