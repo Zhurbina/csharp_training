@@ -17,7 +17,7 @@ namespace WebAddressbookTests
         public HelperBase(ApplicationManager manager)
         {
             this.manager = manager;
-            driver = manager.Driver;
+            this.driver = manager.Driver;
         }
 
 
