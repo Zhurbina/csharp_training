@@ -11,7 +11,6 @@ namespace WebAddressbookTests
 {
     public class ContactHelper : HelperBase
     {
-        private string index;
 
         public ContactHelper(ApplicationManager manager) 
             : base(manager)
@@ -20,9 +19,12 @@ namespace WebAddressbookTests
 
         public ContactHelper ModifyContact(int v, ContactData newData)
         {
-
+            if (!IsElementPresent(By.Name("selected[]")))
+            {
+                ContactData contact = new ContactData("Bory", "DDDDDD");
+                CreateContact(contact);
+            }
             manager.Navigator.GoToHomePage();
-            SelectContact(v);
             InitContactModification(v);
             FillContactForm(newData);
             SubmitContactModification();
@@ -30,7 +32,6 @@ namespace WebAddressbookTests
 
             return this;
         }
-
 
         public ContactHelper SubmitContactModification()
         {
@@ -46,7 +47,11 @@ namespace WebAddressbookTests
 
         public ContactHelper Remove(int v)
         {
-
+            if (!IsElementPresent(By.Name("selected[]")))
+            {
+                ContactData contact = new ContactData("Bory", "DDDDDD");
+                CreateContact(contact);
+            }
             manager.Navigator.GoToHomePage();
             SelectContact(v);
             RemoveContact();
@@ -73,7 +78,6 @@ namespace WebAddressbookTests
             SubmitContactCreation();
             return this;
         }
-
 
         public ContactHelper SelectContact(int index)
         {
