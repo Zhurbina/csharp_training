@@ -21,7 +21,7 @@ namespace WebAddressbookTests
 
         public void GoToHomePage()
         {
-            driver.Navigate().GoToUrl("http://localhost/addressbook/group.php");
+            driver.Navigate().GoToUrl("http://localhost/addressbook/");
         }
 
         public void GoToGroupsPage()
