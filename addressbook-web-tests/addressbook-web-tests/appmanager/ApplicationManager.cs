@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -15,30 +16,26 @@ namespace WebAddressbookTests
         protected string baseURL;
 
         protected LoginHelper loginHelper;
-        protected NavigationHelper navigator;
+        protected NavigationHelper navigationHelper;
         protected GroupHelper groupHelper;
         protected ContactHelper contactHelper;
         protected LogoutHelper logoutHelper;
 
-        public ApplicationManager()
+        private static ThreadLocal<ApplicationManager> app = new ThreadLocal<ApplicationManager>();
+
+        private ApplicationManager()
         {
             driver = new ChromeDriver(@"C:\Tools");
-            baseURL = "http://localhost/addressbook/";
+            baseURL = "http://localhost";
+
             loginHelper = new LoginHelper(this);
-            navigator = new NavigationHelper(this, baseURL);
+            navigationHelper = new NavigationHelper(this, baseURL);
             groupHelper = new GroupHelper(this);
             contactHelper = new ContactHelper(this);
             logoutHelper = new LogoutHelper(this);          
         }
-        public IWebDriver Driver
-        {
-            get
-            {
-                return driver;
-            }
-        }
 
-        public void Stop()
+        ~ApplicationManager()
         {
             try
             {
@@ -47,6 +44,25 @@ namespace WebAddressbookTests
             catch (Exception)
             {
                 // Ignore errors if unable to close the browser
+            }
+        }
+
+        public static ApplicationManager GetInstance()
+        {
+            if (!app.IsValueCreated)
+            {
+                ApplicationManager newInstance = new ApplicationManager();
+                newInstance.Navigator.GoToHomePage();
+                app.Value = newInstance;
+            }
+            return app.Value;
+        }
+
+        public IWebDriver Driver
+        {
+            get
+            {
+                return driver;
             }
         }
 
@@ -62,7 +78,7 @@ namespace WebAddressbookTests
         {
             get
             {
-                return navigator;
+                return navigationHelper;
             }
         }
 

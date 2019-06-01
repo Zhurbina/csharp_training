@@ -10,19 +10,15 @@ using OpenQA.Selenium.Support.UI;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class ContactCreationTests : TestBase
+    public class ContactCreationTests : AuthTestBase
     {
-        private IWebDriver driver;
-        private StringBuilder verificationErrors;
-        private string baseURL;
-        private bool acceptNextAlert = true;
-
 
         [Test]
         public void ContactCreationTest()
         {
             ContactData contact = new ContactData("ALENA", "LIU");
             contact.Company = "OCS";
+
             app.Contacts.CreateContact(contact);
             app.LogOut.Logout();
         }
