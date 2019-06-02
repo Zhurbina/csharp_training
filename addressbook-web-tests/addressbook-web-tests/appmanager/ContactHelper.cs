@@ -17,13 +17,25 @@ namespace WebAddressbookTests
         {
         }
 
+        public List<ContactData> GetContactList()
+        {
+            List<ContactData> contacts = new List<ContactData>();
+            manager.Navigator.GoToHomePage();
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
+
+            foreach (IWebElement element in elements)
+            {
+               contacts.Add(new ContactData(element.FindElement(By.XPath(".//td[2]")).Text,
+               element.FindElement(By.XPath(".//td[3]")).Text));
+            }
+
+            return contacts;
+
+        }
+
         public ContactHelper ModifyContact(int v, ContactData newData)
         {
-            if (!IsElementPresent(By.Name("selected[]")))
-            {
-                ContactData contact = new ContactData("Bory", "DDDDDD");
-                CreateContact(contact);
-            }
+
             manager.Navigator.GoToHomePage();
             InitContactModification(v);
             FillContactForm(newData);
@@ -41,23 +53,29 @@ namespace WebAddressbookTests
 
         public ContactHelper InitContactModification(int v)
         {
-            driver.FindElement(By.XPath("(//img[@alt='Edit'])[" + v + "]")).Click();
+            driver.FindElement(By.XPath("(//img[@alt='Edit'])[" + (v + 1) + "]")).Click();
             return this;
         }
 
         public ContactHelper Remove(int v)
         {
-            if (!IsElementPresent(By.Name("selected[]")))
-            {
-                ContactData contact = new ContactData("Bory", "DDDDDD");
-                CreateContact(contact);
-            }
+ 
             manager.Navigator.GoToHomePage();
             SelectContact(v);
             RemoveContact();
 
             manager.Navigator.GoToHomePage();
 
+            return this;
+        }
+
+        public ContactHelper ContactExists()
+        {
+            if (!IsElementPresent(By.Name("selected[]")))
+            {
+                ContactData contact = new ContactData("QQQ", "WWW");
+                CreateContact(contact);
+            }
             return this;
         }
 
@@ -79,9 +97,9 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public ContactHelper SelectContact(int index)
+        public ContactHelper SelectContact(int v)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (v + 1) + "]")).Click();
             return this;
         }
 

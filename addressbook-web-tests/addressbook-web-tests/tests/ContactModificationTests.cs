@@ -13,9 +13,20 @@ namespace WebAddressbookTests
          [Test]
          public void ContactModificationTest()
          {
-                ContactData newData = new ContactData("Max1", "Just1");
+            app.Contacts.ContactExists();
 
-                app.Contacts.ModifyContact(1, newData);
-         }
+            ContactData newData = new ContactData("Just1", "Max");
+
+            List<ContactData> oldContacts = app.Contacts.GetContactList();
+
+            app.Contacts.ModifyContact(0, newData);
+
+            List<ContactData> newContacts = app.Contacts.GetContactList();
+            oldContacts[0].Name = newData.Name;
+            oldContacts.Sort();
+            newContacts.Sort();
+
+            Assert.AreEqual(oldContacts, newContacts);
+        }
     }
 }

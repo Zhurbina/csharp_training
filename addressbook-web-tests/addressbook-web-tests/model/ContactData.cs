@@ -6,16 +6,55 @@ using System.Threading.Tasks;
 
 namespace WebAddressbookTests
 {
-    public class ContactData
+    public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
         private string firstName;
         private string lastName;
+        public string Name;
         private string company = "";
 
-        public ContactData(string firstName, string lastName)
+        public ContactData(string lastName, string firstName)
         {
             this.firstName = firstName;
             this.lastName = lastName;
+        }
+
+        public bool Equals(ContactData other)
+        {
+            if (Object.ReferenceEquals(other, null))
+            {
+                return false;
+            }
+            if (Object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            Name = lastName + firstName;
+            return Name == other.LastName + FirstName;
+
+        }
+
+        public override int GetHashCode()
+        {
+            return LastName.GetHashCode();
+        }
+
+        public int CompareTo(ContactData other)
+        {
+            if (Object.ReferenceEquals(other, null))
+            {
+                return 1;
+            }
+
+            Name = lastName + firstName;
+            return Name.CompareTo(other.LastName + FirstName);
+
+        }
+
+        public override string ToString()
+        {
+            return "name=" + LastName;
         }
 
         public string FirstName
