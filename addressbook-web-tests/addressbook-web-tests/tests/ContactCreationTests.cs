@@ -30,7 +30,6 @@ namespace WebAddressbookTests
             newContacts.Sort();
             Assert.AreEqual(oldContacts, newContacts);
 
-            app.LogOut.Logout();
         }
     }
 }
