@@ -15,8 +15,8 @@ namespace WebAddressbookTests
 
         public ContactData(string lastName, string firstName)
         {
-            this.firstName = firstName;
-            this.lastName = lastName;
+            FirstName = firstName;
+            LastName = lastName;
         }
 
         public bool Equals(ContactData other)
@@ -25,19 +25,17 @@ namespace WebAddressbookTests
             {
                 return false;
             }
+
             if (Object.ReferenceEquals(this, other))
             {
                 return true;
             }
 
-            Name = lastName + firstName;
-            return Name == other.LastName + FirstName;
-
-        }
-
-        public override int GetHashCode()
-        {
-            return LastName.GetHashCode();
+           if ((LastName == other.LastName) && (FirstName == other.FirstName))
+            {
+                return true;
+            }
+            return false;
         }
 
         public int CompareTo(ContactData other)
@@ -47,50 +45,36 @@ namespace WebAddressbookTests
                 return 1;
             }
 
-            Name = lastName + firstName;
-            return Name.CompareTo(other.LastName + FirstName);
+            if (LastName.CompareTo(other.LastName) == 0)
+            {
+                return FirstName.CompareTo(other.FirstName);
+            }
+            if (LastName.CompareTo(other.LastName) > 0)
+            {
+                return 1;
+            }
+            if (LastName.CompareTo(other.LastName) < 0)
+            {
+                return -1;
+            }
+            return 0;
+        }
 
+        public override int GetHashCode()
+        {
+            return LastName.GetHashCode();
         }
 
         public override string ToString()
         {
-            return "name=" + LastName;
+            return "FirstName=" + FirstName + " LastName=" + LastName;
         }
 
-        public string FirstName
-        {
-            get
-            {
-                return firstName;
-            }
-            set
-            {
-                firstName = value;
-            }
-        }
+        public string FirstName { get; set; } 
 
-        public string LastName
-        {
-            get
-            {
-                return lastName;
-            }
-            set
-            {
-                lastName = value;
-            }
-        }
+        public string LastName { get; set; }
 
-        public string Company
-        {
-            get
-            {
-                return company;
-            }
-            set
-            {
-                company = value;
-            }
-        }
+        public string Company { get; set; }
+
     }
 }

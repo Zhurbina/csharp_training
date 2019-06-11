@@ -42,5 +42,9 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.LinkText("add new")).Click();
         }
+        public void ReturnToGroupsPage()
+        {
+            driver.FindElement(By.LinkText("group page")).Click();
+        }
     }
 }

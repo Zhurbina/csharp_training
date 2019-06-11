@@ -25,7 +25,7 @@ namespace WebAddressbookTests
         private ApplicationManager()
         {
             driver = new ChromeDriver(@"C:\Tools");
-            baseURL = "http://localhost";
+            baseURL = "http://localhost/addressbook";
 
             loginHelper = new LoginHelper(this);
             navigationHelper = new NavigationHelper(this, baseURL);

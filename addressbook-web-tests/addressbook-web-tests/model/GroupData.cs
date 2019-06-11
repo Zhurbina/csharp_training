@@ -15,6 +15,14 @@ namespace WebAddressbookTests
         public GroupData(string name)
         {
             this.name = name;
+            Name = name;
+        }
+
+        public GroupData(string name, string header, string footer)
+        {
+            Name = name;
+            Header = footer;
+            Footer = footer;
         }
 
         public bool Equals(GroupData other)
@@ -23,16 +31,12 @@ namespace WebAddressbookTests
             {
                 return false;
             }
+
             if (Object.ReferenceEquals(this, other))
             {
                 return true;
             }
             return Name == other.Name;
-        }
-
-        public override int GetHashCode()
-        {
-            return Name.GetHashCode();
         }
 
         public int CompareTo(GroupData other)
@@ -44,45 +48,21 @@ namespace WebAddressbookTests
             return Name.CompareTo(other.Name);
         }
 
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
         public override string ToString()
         {
-            return "name=" + Name;
+            return "name =" + Name;
         }
 
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
-        }
+        public string Name { get; set; }
 
-        public string Header
-        {
-            get
-            {
-                return header;
-            }
-            set
-            {
-                header = value;
-            }
-        }
+        public string Header { get; set; }
 
-        public string Footer
-        {
-            get
-            {
-                return footer;
-            }
-            set
-            {
-                footer = value;
-            }
-        }
+
+        public string Footer { get; set; }
     }
 }
