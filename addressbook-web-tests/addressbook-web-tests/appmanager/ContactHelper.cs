@@ -129,6 +129,14 @@ namespace WebAddressbookTests
             Type(By.Name("lastname"), contact.LastName);
             return this;
         }
+
+        public int GetNumberOfResults()
+        {
+            manager.Navigator.GoToHomePage();
+            string text = driver.FindElement(By.Id("search_count")).Text;
+            return Int32.Parse(text);
+        }
+
         public ContactData GetContactInfoFromTable(int index)
         {
             manager.Navigator.GoToHomePage();
@@ -169,13 +177,44 @@ namespace WebAddressbookTests
             return new ContactData(firstName, lastName)
             {
                 Address = address,
-                Homephone = homePhone,
-                Mobilephone = mobilePhone,
-                Workphone = workPhone,
+                HomePhone = homePhone,
+                MobilePhone = mobilePhone,
+                WorkPhone = workPhone,
                 Email1 = email1,
                 Email2 = email2,
                 Email3 = email3
             };
+        }
+
+        public ContactData GetContactInfoFromDetails(int index)
+        {
+            manager.Navigator.GoToHomePage();
+            DetailsContactBtn(0);
+            string text = driver.FindElement(By.Id("content")).Text;
+            //return new ContactData(allInfo);
+            return new ContactData(text);
+        }
+
+        public ContactHelper DetailsContactBtn(int index)
+        {
+            driver.FindElement(By.XPath("(//img[@alt='Details'])[" + (index + 1) + "]")).Click();
+            return this;
+        }
+
+        public string GetContactPropertyForm()
+        {
+            manager.Navigator.GoToHomePage();
+            DetailsContact(0);
+
+            string propertyContact = driver.FindElement(By.Name("content")).Text;
+            return propertyContact;
+        }
+
+        public void DetailsContact(int index)
+        {
+            driver.FindElements(By.Name("entry"))[index]
+                .FindElements(By.TagName("td"))[6]
+                .FindElement(By.TagName("a")).Click();
         }
     }
 }
