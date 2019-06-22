@@ -8,20 +8,15 @@ namespace WebAddressbookTests
 {
     public class GroupData : IEquatable<GroupData>, IComparable<GroupData>
     {
-        private string name;
-        private string header = "";
-        private string footer = "";
-
         public GroupData(string name)
         {
-            this.name = name;
             Name = name;
         }
 
         public GroupData(string name, string header, string footer)
         {
             Name = name;
-            Header = footer;
+            Header = header;
             Footer = footer;
         }
 
@@ -55,13 +50,12 @@ namespace WebAddressbookTests
 
         public override string ToString()
         {
-            return "name =" + Name;
+            return "name =" + Name + "\nheader=" + Header + "\nfooter=" + Footer;
         }
 
         public string Name { get; set; }
 
         public string Header { get; set; }
-
 
         public string Footer { get; set; }
     }
