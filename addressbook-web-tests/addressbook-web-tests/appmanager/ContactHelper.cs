@@ -11,7 +11,7 @@ namespace WebAddressbookTests
 {
     public class ContactHelper : HelperBase
     {
-        private string baseURL;
+        private readonly string baseURL;
         public ContactHelper(ApplicationManager manager) 
             : base(manager)
         {
