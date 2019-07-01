@@ -15,6 +15,7 @@ namespace WebAddressbookTests
         public GroupHelper(ApplicationManager manager) 
             : base(manager)
         {
+            this.baseURL = baseURL;
         }
 
         private List<GroupData> groupCache = null;
@@ -78,11 +79,28 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public GroupHelper Remove(int v)
+        public GroupHelper Remove(int id)
         {
             manager.Navigator.GoToGroupsPage();
 
-            SelectGroup(v);
+            SelectGroup(id);
+            RemoveGroup();
+            ReturnToGroupsPage();
+            return this;
+        }
+
+        public GroupHelper Remove(GroupData group)
+        {
+            manager.Navigator.GoToGroupsPage();
+
+            if (driver.Url == baseURL + "group.php"
+                && !IsElementPresent(By.Name("selected[]")))
+            {
+                GroupData newGroup = new GroupData("a", "b", "c");
+                Create(newGroup);
+            }
+
+            SelectGroup(group.Id);
             RemoveGroup();
             ReturnToGroupsPage();
             return this;
@@ -92,7 +110,6 @@ namespace WebAddressbookTests
 
         {
             return driver.FindElements(By.CssSelector("span.group")).Count;
-
         }
 
 
@@ -134,12 +151,18 @@ namespace WebAddressbookTests
             return this;
         }
 
+
         public GroupHelper SelectGroup(int v)
         {
             driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (v + 1) + "]")).Click();
             return this;
         }
 
+        public GroupHelper SelectGroup(string id)
+        {
+            driver.FindElement(By.XPath("(//input[@name='selected[]' and @value='" + id + "'])")).Click();
+            return this;
+        }
 
         public GroupHelper SubmitGroupModification()
         {

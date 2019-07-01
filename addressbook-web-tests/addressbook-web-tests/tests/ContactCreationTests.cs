@@ -15,30 +15,10 @@ using Newtonsoft.Json;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class ContactCreationTests : AuthTestBase
+    public class ContactCreationTests : ContactTestBase
     {
 
         [Test]
-       /* public static IEnumerable<ContactData> RandomContactDataProvider()
-        {
-            List<ContactData> contacts = new List<ContactData>();
-            for (int i = 0; i < 3; i++)
-            {
-                contacts.Add(new ContactData(GenerateRandomString(10), GenerateRandomString(10))
-                {
-                    Address = GenerateRandomString(15),
-                    HomePhone = Convert.ToString(rnd.Next(00000, 29999)),
-                    MobilePhone = Convert.ToString(rnd.Next(30000, 59999)),
-                    WorkPhone = Convert.ToString(rnd.Next(60000, 79999)),
-                    Fax = Convert.ToString(rnd.Next(80000, 99999)),
-                    Email1 = GenerateRandomString(5) + "@" + GenerateRandomString(5),
-                    Email2 = GenerateRandomString(5) + "@" + GenerateRandomString(5),
-                    Email3 = GenerateRandomString(5) + "@" + GenerateRandomString(5)
-                });
-            }
-            return contacts;
-        }*/
-
         public static IEnumerable<ContactData> ContactDataFromCsvFile()
         {
             List<ContactData> contacts = new List<ContactData>();

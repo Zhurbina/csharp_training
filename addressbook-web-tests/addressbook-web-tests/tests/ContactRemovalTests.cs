@@ -1,17 +1,17 @@
-﻿using System;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class ContactRemovalTests : AuthTestBase
+    public class ContactRemovalTests : ContactTestBase
     {
 
         [Test]
@@ -20,15 +20,21 @@ namespace WebAddressbookTests
             app.Navigator.GoToHomePage();
             app.Contacts.ContactExists();
 
-            List<ContactData> oldContacts = app.Contacts.GetContactList();
-            app.Contacts.Remove(0);
+            List<ContactData> oldContacts = ContactData.GetAll();
+            ContactData toBeRemoved = oldContacts[0];
 
-            List<ContactData> newContacts = app.Contacts.GetContactList();
+            app.Contacts.Remove(toBeRemoved);
+            List<ContactData> newContacts = ContactData.GetAll();
 
             oldContacts.RemoveAt(0);
             oldContacts.Sort();
             newContacts.Sort();
             Assert.AreEqual(oldContacts, newContacts);
+
+            foreach (ContactData contact in newContacts)
+            {
+                Assert.AreEqual(contact.id, toBeRemoved.Id);
+            }
         }
     }
 }

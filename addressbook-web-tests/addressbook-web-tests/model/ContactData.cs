@@ -7,12 +7,15 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using LinqToDB.Mapping;
 
 namespace WebAddressbookTests
 {
+    [Table(Name = "addressbook")]
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
         private string allEmails, allPhones, detailsInfo;
+        internal int Id;
 
         public ContactData()
         {
@@ -88,8 +91,26 @@ namespace WebAddressbookTests
                 + "Email3=" + Email3;
         }
 
-        public string FirstName { get; set; } 
+        [Column(Name = "firstname")]
+        public string FirstName { get; set; }
+
+        [Column(Name = "lastname")]
         public string LastName { get; set; }
+
+        [Column(Name = "id"), PrimaryKey, Identity]
+        public string id { get; set; }
+
+        public static List<ContactData> GetAll()
+        {
+            using (AddressBookDB db = new AddressBookDB())
+            {
+                return (from c in db.Contacts.Where(x => x.Deprecated == "0000-00-00 00:00:00") select c).ToList();
+            }
+        }
+
+        [Column(Name = "deprecated")]
+        public string Deprecated { get; set; }
+
         public string Address { get; set; }
         public string Company { get; set; }
         public string HomePhone { get; set; }
