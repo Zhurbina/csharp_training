@@ -82,7 +82,6 @@ namespace WebAddressbookTests
         [Column(Name = "deprecated")]
         public string Deprecated { get; set; }
 
-
         public List<ContactData> GetContacts()
         {
             using (AddressBookDB db = new AddressBookDB())

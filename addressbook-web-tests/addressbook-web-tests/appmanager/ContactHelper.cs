@@ -25,6 +25,7 @@ namespace WebAddressbookTests
                 contactCache = new List<ContactData>();
                 manager.Navigator.GoToHomePage();
                 ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
+
                 foreach (IWebElement element in elements)
                 {
                     contactCache.Add(new ContactData(element.FindElement(By.XPath(".//td[2]")).Text,
@@ -34,7 +35,9 @@ namespace WebAddressbookTests
             return new List<ContactData>(contactCache);
         }
 
-        internal void AddContactToGroup(ContactData contact, GroupData group)
+
+
+        public void AddContactToGroup(ContactData contact, GroupData group)
         {
             manager.Navigator.GoToHomePage();
             ClearGroupFilter();
@@ -43,6 +46,30 @@ namespace WebAddressbookTests
             CommitAddingContactToGroup();
             new WebDriverWait(driver, TimeSpan.FromSeconds(10))
                 .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
+        }
+
+        public void DellContactToGroup(ContactData contact, GroupData group)
+        {
+            manager.Navigator.GoToHomePage();
+            ClearGroupFilter();
+
+            SelectGroupToDell(group.Name);
+            SelectContactG(contact.id);
+
+            DellContactToGroup();
+
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+                .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
+        }
+
+        private void DellContactToGroup()
+        {
+            driver.FindElement(By.Name("remove")).Click();
+        }
+
+        private void SelectGroupToDell(string name)
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText(name);
         }
 
         private void CommitAddingContactToGroup()
@@ -78,6 +105,29 @@ namespace WebAddressbookTests
             manager.Navigator.GoToHomePage();
             return this;
         }
+
+        public ContactHelper ModifyContact(ContactData contact, ContactData nawData)
+        {
+            manager.Navigator.GoToHomePage();
+            InitContactModificationC(contact.id);
+            FillContactForm(nawData);
+            SubmitContactModification();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+    .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
+
+            manager.Navigator.GoToHomePage();
+
+
+
+            return this;
+        }
+
+        private ContactHelper InitContactModificationC(string id)
+        {
+            driver.FindElement(By.XPath("(//input[@name='selected[]' and @value= '" + id + "'])")).FindElement(By.XPath("(//img[@alt='Edit'])")).Click();
+            return this;
+        }
+
         public ContactHelper SubmitContactModification()
         {
             driver.FindElement(By.Name("update")).Click();

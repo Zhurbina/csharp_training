@@ -99,11 +99,12 @@
     <Compile Include="appmanager\GroupHelper.cs" />
     <Compile Include="tests\AddingContactToGroupTests.cs" />
     <Compile Include="tests\AuthTestBase.cs" />
-    <Compile Include="tests\ContactInformationTests.cs" />
+    <Compile Include="tests\ContactInformationTest.cs" />
     <Compile Include="tests\ContactModificationTests.cs" />
     <Compile Include="tests\ContactPropertyTests.cs" />
     <Compile Include="tests\ContactRemovalTests.cs" />
     <Compile Include="tests\ContactTestBase.cs" />
+    <Compile Include="tests\DellContactToGroupTests.cs" />
     <Compile Include="tests\GroupModificationTests.cs" />
     <Compile Include="tests\GroupRemovalTests.cs" />
     <Compile Include="appmanager\HelperBase.cs" />
