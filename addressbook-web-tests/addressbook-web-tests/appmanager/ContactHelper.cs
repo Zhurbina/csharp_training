@@ -17,31 +17,91 @@ namespace WebAddressbookTests
         {
         }
 
-        private List<ContactData> contactCache = null;
-        public List<ContactData> GetContactList()
+        public ContactData GetContactInfoFromForm(int index)
         {
-            if (contactCache == null)
+            manager.Navigator.GoToHomePage();
+            EditContactBtn(index);
+            string firstName = driver.FindElement(By.Name("firstname")).GetAttribute("value");
+            string middleName = driver.FindElement(By.Name("middlename")).GetAttribute("value");
+            string lastName = driver.FindElement(By.Name("lastname")).GetAttribute("value");
+            string address = driver.FindElement(By.Name("address")).GetAttribute("value");
+            string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
+            string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
+            string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+            string email1 = driver.FindElement(By.Name("email")).GetAttribute("value");
+            string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
+            string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
+            return new ContactData(firstName, lastName)
             {
-                contactCache = new List<ContactData>();
-                manager.Navigator.GoToHomePage();
-                ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
-
-                foreach (IWebElement element in elements)
-                {
-                    contactCache.Add(new ContactData(element.FindElement(By.XPath(".//td[2]")).Text,
-                      element.FindElement(By.XPath(".//td[3]")).Text));
-                }
-            }
-            return new List<ContactData>(contactCache);
+                Address = address,
+                HomePhone = homePhone,
+                MobilePhone = mobilePhone,
+                WorkPhone = workPhone,
+                Email1 = email1,
+                Email2 = email2,
+                Email3 = email3
+            };
         }
 
+        public ContactData GetDetailsContactInfoFromForm(int index)
+        {
+            manager.Navigator.GoToHomePage();
+            EditContactBtn(index);
+            string firstName = driver.FindElement(By.Name("firstname")).GetAttribute("value");
+            string middleName = driver.FindElement(By.Name("middlename")).GetAttribute("value");
+            string lastName = driver.FindElement(By.Name("lastname")).GetAttribute("value");
+            string address = driver.FindElement(By.Name("address")).GetAttribute("value");
+            string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
+            string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
+            string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+            string fax = driver.FindElement(By.Name("fax")).GetAttribute("value");
+            string email1 = driver.FindElement(By.Name("email")).GetAttribute("value");
+            string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
+            string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
+            return new ContactData(firstName, lastName)
+            {
+                Address = address,
+                HomePhone = homePhone,
+                MobilePhone = mobilePhone,
+                WorkPhone = workPhone,
+                Fax = fax,
+                Email1 = email1,
+                Email2 = email2,
+                Email3 = email3
+            };
+        }
 
+        public ContactData GetContactInformationFormTable(int index)
+        {
+            manager.Navigator.GoToHomePage();
+            IList<IWebElement> cells = driver.FindElements(By.Name("entry"))[index].FindElements(By.TagName("td"));
+            string lastName = cells[1].Text;
+            string firstName = cells[2].Text;
+            string address = cells[3].Text;
+            string allPhones = cells[5].Text;
+            string allEmail = cells[4].Text;
+            return new ContactData(firstName, lastName)
+            {
+                Address = address,
+                AllPhones = allPhones,
+                AllEmails = allEmail
+            };
+        }
+
+        public ContactData GetContactInfoFromDetails(int index)
+        {
+            manager.Navigator.GoToHomePage();
+            DetailsContactBtn(0);
+            string text = driver.FindElement(By.Id("content")).Text;
+            //return new ContactData(allInfo);
+            return new ContactData(text);
+        }
 
         public void AddContactToGroup(ContactData contact, GroupData group)
         {
             manager.Navigator.GoToHomePage();
             ClearGroupFilter();
-            SelectContact(contact.id);
+            SelectContactG(contact.id);
             SelectGroupToAdd(group.Name);
             CommitAddingContactToGroup();
             new WebDriverWait(driver, TimeSpan.FromSeconds(10))
@@ -55,9 +115,7 @@ namespace WebAddressbookTests
 
             SelectGroupToDell(group.Name);
             SelectContactG(contact.id);
-
             DellContactToGroup();
-
             new WebDriverWait(driver, TimeSpan.FromSeconds(10))
                 .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
         }
@@ -66,31 +124,94 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.Name("remove")).Click();
         }
-
-        private void SelectGroupToDell(string name)
-        {
-            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText(name);
-        }
-
         private void CommitAddingContactToGroup()
         {
             driver.FindElement(By.Name("add")).Click();
         }
-
+        private void SelectGroupToDell(string name)
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText(name);
+        }
         private void SelectGroupToAdd(string name)
         {
             new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(name);
         }
-
         private void SelectContactG(string contactId)
         {
             driver.FindElement(By.Id(contactId)).Click();
         }
-
         private void ClearGroupFilter()
         {
             new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
         }
+
+        public void DetailsContact(int index)
+        {
+            driver.FindElements(By.Name("entry"))[index]
+                .FindElements(By.TagName("td"))[6]
+                .FindElement(By.TagName("a")).Click();
+        }
+
+
+
+        public ContactHelper EditContactBtn(int index)
+        {
+            driver.FindElement(By.XPath("(//img[@alt='Edit'])[" + (index + 1) + "]")).Click();
+            return this;
+        }
+        public ContactHelper EditContactBtn(string id)
+        {
+            driver.FindElement(By.XPath("//a[@href='edit.php?id=" + id + "']")).Click();
+            return this;
+        }
+
+        public ContactHelper ContactExists()
+        {
+            if (!IsElementPresent(By.Name("selected[]")))
+            {
+                ContactData contact = new ContactData("Bory", "DDDDDD");
+                CreateContact(contact);
+            }
+            return this;
+        }
+
+        public void IsAbleToAddInGroup(List<GroupData> groupContactList)
+        {
+            List<GroupData> allGroups = GroupData.GetAll();
+
+            if (allGroups.Count.Equals(groupContactList.Count))
+            {
+                ContactData contact = new ContactData("firstname", "lastname");
+                CreateContact(contact);
+            }
+        }
+
+        public void IsAddedInGroup(ContactData contact, List<ContactData> groupList, GroupData group)
+        {
+            if (groupList.Count == 0)
+            {
+                AddContactToGroup(contact, group);
+            }
+        }
+
+        private List<ContactData> contactCache = null;
+        public List<ContactData> GetContactList()
+        {
+            if (contactCache == null)
+            {
+                contactCache = new List<ContactData>();
+                manager.Navigator.GoToHomePage();
+                ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
+                foreach (IWebElement element in elements)
+                {
+                    contactCache.Add(new ContactData(element.FindElement(By.XPath(".//td[2]")).Text,
+                      element.FindElement(By.XPath(".//td[3]")).Text));
+                }
+            }
+            return new List<ContactData>(contactCache);
+
+        }
+
 
         public int GetContactCount()
         {
@@ -117,14 +238,6 @@ namespace WebAddressbookTests
 
             manager.Navigator.GoToHomePage();
 
-
-
-            return this;
-        }
-
-        private ContactHelper InitContactModificationC(string id)
-        {
-            driver.FindElement(By.XPath("(//input[@name='selected[]' and @value= '" + id + "'])")).FindElement(By.XPath("(//img[@alt='Edit'])")).Click();
             return this;
         }
 
@@ -139,36 +252,31 @@ namespace WebAddressbookTests
             driver.FindElement(By.XPath("(//img[@alt='Edit'])[" + (v + 1) + "]")).Click();
             return this;
         }
+
+        public ContactHelper InitContactModificationC(string id)
+        {
+            driver.FindElement(By.XPath("(//input[@name='selected[]' and @value= '" + id + "'])")).FindElement(By.XPath("(//img[@alt='Edit'])")).Click();
+            return this;
+        }
+
         public ContactHelper Remove(int v)
         {
+
             manager.Navigator.GoToHomePage();
             SelectContact(v);
             RemoveContact();
             manager.Navigator.GoToHomePage();
             return this;
         }
-
         public ContactHelper Remove(ContactData contact)
         {
             manager.Navigator.GoToHomePage();
-
             SelectContact(contact.Id);
             RemoveContact();
-
             manager.Navigator.GoToHomePage();
-
             return this;
         }
 
-        public ContactHelper ContactExists()
-        {
-            if (!IsElementPresent(By.Name("selected[]")))
-            {
-                ContactData contact = new ContactData("Bory", "DDDDDD");
-                CreateContact(contact);
-            }
-            return this;
-        }
         public ContactHelper RemoveContact()
         {
 
@@ -191,14 +299,11 @@ namespace WebAddressbookTests
             driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (v + 1) + "]")).Click();
             return this;
         }
-
         public ContactHelper SelectContact(string id)
         {
-
             driver.FindElement(By.XPath("(//input[@name='selected[]' and @value= '" + id + "'])")).Click();
             return this;
         }
-
         public ContactHelper SubmitContactCreation()
         {
             driver.FindElement(By.XPath("(//input[@name='submit'])[2]")).Click();
@@ -211,22 +316,7 @@ namespace WebAddressbookTests
             Type(By.Name("lastname"), contact.LastName);
             return this;
         }
-        public ContactData GetContactInformationFormTable(int index)
-        {
-            manager.Navigator.GoToHomePage();
-            IList<IWebElement> cells = driver.FindElements(By.Name("entry"))[index].FindElements(By.TagName("td"));
-            string lastName = cells[1].Text;
-            string firstName = cells[2].Text;
-            string address = cells[3].Text;
-            string allPhones = cells[5].Text;
-            string allEmails = cells[4].Text;
-            return new ContactData(firstName, lastName)
-            {
-                Address = address,
-                AllPhones = allPhones,
-                AllEmails = allEmails
-            };
-        }
+
         public ContactData GetContactInformationFormEditForm(int index)
         {
             manager.Navigator.GoToHomePage();
@@ -237,7 +327,7 @@ namespace WebAddressbookTests
             string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
             string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
             string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
-            string email1 = driver.FindElement(By.Name("email1")).GetAttribute("value");
+            string email = driver.FindElement(By.Name("email")).GetAttribute("value");
             string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
             string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
             return new ContactData(firstName, lastName)
@@ -246,19 +336,12 @@ namespace WebAddressbookTests
                 HomePhone = homePhone,
                 MobilePhone = mobilePhone,
                 WorkPhone = workPhone,
-                Email1 = email1,
+                Email1 = email,
                 Email2 = email2,
                 Email3 = email3
             };
         }
-        public ContactData GetContactInfoFromDetails(int index)
-        {
-            manager.Navigator.GoToHomePage();
-            DetailsContactBtn(0);
-            string text = driver.FindElement(By.Id("content")).Text;
-            //return new ContactData(allInfo);
-            return new ContactData(text);
-        }
+
         public ContactHelper DetailsContactBtn(int index)
         {
             driver.FindElement(By.XPath("(//img[@alt='Details'])[" + (index + 1) + "]")).Click();
@@ -270,12 +353,6 @@ namespace WebAddressbookTests
             DetailsContact(0);
             string propertyContact = driver.FindElement(By.Name("content")).Text;
             return propertyContact;
-        }
-        public void DetailsContact(int index)
-        {
-            driver.FindElements(By.Name("entry"))[index]
-                .FindElements(By.TagName("td"))[6]
-                .FindElement(By.TagName("a")).Click();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace WebAddressbookTests
     {
         [Test]
 
-        public void DelContactToGroup()
+        public void DellContactToGroup()
         {
             GroupData group = GroupData.GetAll()[0];
             List<ContactData> oldList = group.GetContacts();
